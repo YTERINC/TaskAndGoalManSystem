@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 // Модель пользователя
 @Entity
 @Table(name = "Person")
@@ -13,7 +15,7 @@ public class Person {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной")
     @Column(name = "full_name")
@@ -28,6 +30,8 @@ public class Person {
     @Column(name = "year_of_birth")
     private int yearOfBirth;
 
+    @OneToMany(mappedBy = "owner")
+    private List<Task> tasks;
 
     public Person() {
     }
@@ -67,5 +71,17 @@ public class Person {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

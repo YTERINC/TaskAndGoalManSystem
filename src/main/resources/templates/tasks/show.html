@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Информация о задаче</title>
+</head>
+<body>
+
+<h2> Информация о задаче </h2>
+<HR/>
+
+<p th:text="${task.getTaskName() + ',   ' + task.getPriority() + ',  ' + task.getStatus()}">VALUE</p>
+
+
+<form th:method="GET" th:action="@{/tasks/{id}/edit(id=${task.getId()})}">
+    <input type="submit" value="Редактировать"/>
+</form>
+
+<form th:method="DELETE" th:action="@{/tasks/{id}(id=${task.getId()})}">
+    <input type="submit" value="Удалить"/>
+</form>
+
+
+</body>
+</html>

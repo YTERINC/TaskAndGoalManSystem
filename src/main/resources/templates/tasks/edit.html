@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование задачи</title>
+</head>
+<body>
+<h2> Редактирование задачи </h2>
+<HR/>
+
+<form th:method="PATCH" th:action="@{/tasks/{id}(id=${task.getId()})}" th:object="${task}">
+    <label for="taskName">Введите наименование задачи: </label>
+    <input type="text" th:field="*{taskName}" id="taskName"/>
+    <br/>
+
+    <label for="priority">Введите уровень приоритета задачи: </label>
+    <input type="text" th:field="*{priority}" id="priority"/>
+    <br/>
+
+    <label for="status">Введите статус задачи: </label>
+    <input type="text" th:field="*{status}" id="status"/>
+    <br/>
+
+    <input type="submit" value="Применить"/>
+</form>
+
+
+
+</body>
+</html>
