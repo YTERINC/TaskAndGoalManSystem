@@ -3,17 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Список всех задач</title>
+    <link th:rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
 <h2> Список всех задач </h2>
-<HR/>
+<hr/>
 
-<div th:each="task : ${tasks}">
-    <a th:href="@{/tasks/{id}(id=${task.getId()})}"
-       th:text=" '  ' + ${task.getTaskName()}">task</a>
+<div th:if="${tasks.isEmpty()}">
+    <hr/>
+    <p>Задачи отсутствуют</p>
 </div>
 
+<div th:if="${!tasks.isEmpty()}">
+    <br/>
+    <br/>
+    <table>
+        <tr>
+            <th>Наименование задачи</th>
+            <th>Приоритет</th>
+            <th>Статус</th>
+            <th>Время создания</th>
+            <th>Время фактического завершения</th>
+            <th>Крайнее время исполнения</th>
+            <th>Пользователь</th>
+        </tr>
+
+        <tr th:each="task : ${tasks}">
+            <td>
+                <a th:href="@{/tasks/{id}(id=${task.getId()})}"
+                   th:text="${task.getTaskName()}">
+                    value
+                </a>
+            </td>
+
+            <td th:if="${task.getPriority() == 1}" th:text="Высокий">
+                value
+            </td>
+            <td th:if="${task.getPriority() == 2}" th:text="Средний">
+                value
+            </td>
+            <td th:if="${task.getPriority() == 3}" th:text="Низкий">
+                value
+            </td>
+
+            <td th:if="${task.getStatus() == true}" th:text="Активно">
+                value true
+            </td>
+            <td th:if="${task.getStatus() == false}" th:text="Завершено">
+                value false
+            </td>
+
+            <td th:text="${task.getCreatedAt()}">
+                value
+            </td>
+            <td th:text="${task.getExecutionAt()}">
+                value
+            </td>
+            <td th:text="${task.getDeadline()}">
+                value
+            </td>
+
+            <td th:if="${task.getOwner() != null}" >
+                <a th:href="@{/people/{id}(id=${task.getOwner().getId()})}"
+                   th:text="${task.getOwner().getFullName()}">
+                    value
+                </a>
+            </td>
+            <td th:if="${task.getOwner() == null}" th:text="'Задача не назначена'">
+                value
+            </td>
+
+        </tr>
+    </table>
+</div>
 
 </body>
 </html>

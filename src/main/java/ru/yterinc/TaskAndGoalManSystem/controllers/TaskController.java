@@ -6,23 +6,28 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yterinc.TaskAndGoalManSystem.models.Task;
+import ru.yterinc.TaskAndGoalManSystem.services.PeopleService;
 import ru.yterinc.TaskAndGoalManSystem.services.TaskService;
 
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
+    private final PeopleService peopleService;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, PeopleService peopleService) {
         this.taskService = taskService;
+        this.peopleService = peopleService;
     }
 
     @GetMapping()
     public String index(Model model) {
         model.addAttribute("tasks", taskService.findAll());
+        
         return "tasks/index";
     }
+
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("task", taskService.findOne(id));
@@ -30,16 +35,20 @@ public class TaskController {
     }
 
     @GetMapping("/new")
-    public String newPerson(@ModelAttribute("task") Task task) {
+    public String newTask(Model model) {
+        Task task = new Task();
+        model.addAttribute("task", task);
+//        System.out.println("из GET /new --- id = " + id);
         return "tasks/new";
     }
 
+
     @PostMapping()
-    public String create(@ModelAttribute("person") Task task,
+    public String create(@ModelAttribute("task") Task task,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "tasks/new";
-
+//        System.out.println("из POST --- id = " + id);
         taskService.save(task);
         return "redirect:/tasks";
     }
@@ -53,7 +62,6 @@ public class TaskController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("task") Task task,
                          BindingResult bindingResult, @PathVariable("id") int id) {
-//        personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors())
             return "tasks/edit";
 
@@ -66,7 +74,6 @@ public class TaskController {
         taskService.delete(id);
         return "redirect:/tasks";
     }
-
 
 
 }

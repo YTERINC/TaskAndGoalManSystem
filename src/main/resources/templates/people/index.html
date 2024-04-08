@@ -5,15 +5,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Список всех пользователей</title>
+    <link th:rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <h2> Список всех пользователей </h2>
-<HR/>
+<hr/>
 
-<div th:each="person : ${people}">
-    <a th:href="@{/people/{id}(id=${person.getId()})}"
-       th:text=" '  ' + ${person.getFullName()}">user</a>
-</div>
+</br>
+
+<form action="/people/new">
+    <input type="submit" value="Создание нового пользователя"/>
+</form>
+</br>
+
+<form action="/tasks">
+    <input type="submit" value="Список всех задач"/>
+</form>
+</br>
+
+
+<table>
+    <tr>
+        <th>ФИО</th>
+        <th>Описание пользователя</th>
+        <th>Роль</th>
+    </tr>
+
+    <tr th:each="person : ${people}">
+        <td>
+            <a th:href="@{/people/{id}(id=${person.getId()})}"
+               th:text=" '  ' + ${person.getFullName()}">user</a>
+        </td>
+        <td th:text="${person.getDescription()}">
+            description
+        </td>
+        <td th:text="${person.getRole()}">
+            role
+        </td>
+    </tr>
+</table>
 
 </body>
 </html>

@@ -40,6 +40,12 @@ public class Task {
 //    @NotNull
     private Date executionAt;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "report")
+    private String report;
+
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
@@ -47,13 +53,15 @@ public class Task {
     public Task() {
     }
 
-    public Task(String taskName, Integer priority, Boolean status, Date createdAt, Date deadline, Date executionAt, Person owner) {
+    public Task(String taskName, Integer priority, Boolean status, Date createdAt, Date deadline, Date executionAt, String description, String report, Person owner) {
         this.taskName = taskName;
         this.priority = priority;
         this.status = status;
         this.createdAt = createdAt;
         this.deadline = deadline;
         this.executionAt = executionAt;
+        this.description = description;
+        this.report = report;
         this.owner = owner;
     }
 
@@ -121,6 +129,21 @@ public class Task {
         this.owner = owner;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getReport() {
+        return report;
+    }
+
+    public void setReport(String report) {
+        this.report = report;
+    }
 
 
 }

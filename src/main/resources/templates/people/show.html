@@ -1,23 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link th:rel="stylesheet" th:href="@{/css/style.css}">
     <title>Информация о пользователя</title>
 </head>
 <body>
 <h2> Информация о пользователе </h2>
-<HR/>
+<hr/>
 
-<p th:text="${person.getFullName() + ',   ' + person.getEmail() + ',  ' + person.getYearOfBirth()}">VALUE</p>
+<p><b>Имя пользователя:</b> <span th:text="${'  ' + person.getFullName()}">VALUE</span></p>
+<p><b>Email:</b> <span th:text="${'  ' + person.getEmail()}">VALUE</span></p>
+<p><b>Год рождения:</b> <span th:text="${'  ' + person.getYearOfBirth()}">VALUE</span></p>
+<p><b>Роль пользователя:</b> <span th:text="${'  ' + person.getRole()}">VALUE</span></p>
+<p><b>Описание пользователя:</b> <span th:text="${'  ' + person.getDescription()}">VALUE</span></p>
+</br>
 
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="Редактировать"/>
 </form>
+</br>
 
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
     <input type="submit" value="Удалить"/>
 </form>
+</br>
 
 
+<form action="/tasks/new">
+    <input type="submit" value="Создать задачу"/>
+</form>
+
+</br>
+
+<div th:if="${tasks.isEmpty()}">
+    <hr/>
+    <p>У данного пользователя задачи отсутствуют</p>
+</div>
+
+<div th:if="${!tasks.isEmpty()}">
+    <hr/>
+    <b>Задачи:</b>
+    <br/>
+    <br/>
+    <table>
+        <tr>
+            <th>Наименование задачи</th>
+            <th>Приоритет</th>
+            <th>Статус</th>
+            <th>Время создания</th>
+            <th>Время фактического завершения</th>
+            <th>Крайнее время исполнения</th>
+        </tr>
+
+        <tr th:each="task : ${tasks}">
+            <td>
+                <a th:href="@{/tasks/{id}(id=${task.getId()})}"
+                   th:text="${task.getTaskName()}">
+                    value
+                </a>
+            </td>
+
+            <td th:if="${task.getPriority() == 1}" th:text="Высокий">
+                value
+            </td>
+            <td th:if="${task.getPriority() == 2}" th:text="Средний">
+                value
+            </td>
+            <td th:if="${task.getPriority() == 3}" th:text="Низкий">
+                value
+            </td>
+
+            <td th:if="${task.getStatus() == true}" th:text="Активно">
+                value true
+            </td>
+            <td th:if="${task.getStatus() == false}" th:text="Завершено">
+                value false
+            </td>
+
+            <td th:text="${task.getCreatedAt()}">
+                value
+            </td>
+            <td th:text="${task.getExecutionAt()}">
+                value
+            </td>
+            <td th:text="${task.getDeadline()}">
+                value
+            </td>
+
+        </tr>
+    </table>
+</div>
 </body>
 </html>

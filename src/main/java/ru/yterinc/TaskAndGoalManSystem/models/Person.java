@@ -30,22 +30,31 @@ public class Person {
     @Column(name = "year_of_birth")
     private int yearOfBirth;
 
+    @Column(name = "role")
+    private String role;
+
+    @Column(name = "description")
+    private String description;
+
     @OneToMany(mappedBy = "owner")
     private List<Task> tasks;
 
     public Person() {
     }
 
-    public Person(String fullName, int yearOfBirth) {
+    public Person(String fullName, String email, int yearOfBirth, String role, String description) {
         this.fullName = fullName;
+        this.email = email;
         this.yearOfBirth = yearOfBirth;
+        this.role = role;
+        this.description = description;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -57,14 +66,6 @@ public class Person {
         this.fullName = fullName;
     }
 
-    public int getYearOfBirth() {
-        return yearOfBirth;
-    }
-
-    public void setYearOfBirth(int yearOfBirth) {
-        this.yearOfBirth = yearOfBirth;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -73,8 +74,28 @@ public class Person {
         this.email = email;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public int getYearOfBirth() {
+        return yearOfBirth;
+    }
+
+    public void setYearOfBirth(int yearOfBirth) {
+        this.yearOfBirth = yearOfBirth;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<Task> getTasks() {

@@ -32,6 +32,7 @@ public class TaskService {
     @Transactional
     public void save(Task task) {
         task.setCreatedAt(new Date());  // устанавливаем дату и время создания задачи
+        task.setStatus(true);  // При создании задачи, она будут активна
         taskRepository.save(task);
     }
 

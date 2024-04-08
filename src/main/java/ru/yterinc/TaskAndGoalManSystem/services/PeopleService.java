@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yterinc.TaskAndGoalManSystem.models.Person;
+import ru.yterinc.TaskAndGoalManSystem.models.Task;
 import ru.yterinc.TaskAndGoalManSystem.repositories.PeopleRepository;
+import org.hibernate.Hibernate;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,12 +41,14 @@ public class PeopleService {
 
     @Transactional
     public void save(Person person) {
+        person.setRole("ROLE_USER");
         peopleRepository.save(person);
     }
 
     @Transactional
     public void update(int id, Person updatedPerson) {
         updatedPerson.setId(id);
+        updatedPerson.setRole("ROLE_USER");
         peopleRepository.save(updatedPerson);
     }
 
@@ -52,5 +57,17 @@ public class PeopleService {
         peopleRepository.deleteById(id);
     }
 
+    public List<Task> getTaskByPersonId(int id) {
+        Optional<Person> person = peopleRepository.findById(id);
+
+        if (person.isPresent()) {
+            Hibernate.initialize(person.get().getTasks());
+            // не мешает всегда вызывать Hibernate.initialize()
+            // на случай, например, если код в дальнейшем поменяется
+            return person.get().getTasks();
+        } else {
+            return Collections.emptyList();
+        }
+    }
 
 }

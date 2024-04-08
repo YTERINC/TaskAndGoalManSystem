@@ -8,19 +8,38 @@
 <body>
 
 <h2> Информация о задаче </h2>
-<HR/>
+<hr/>
 
-<p th:text="${task.getTaskName() + ',   ' + task.getPriority() + ',  ' + task.getStatus()}">VALUE</p>
 
+<p><b>Наименование задачи:</b> <span th:text="${task.getTaskName()}">VALUE</span></p>
+
+<p><b>Приоритет:</b>
+    <span th:if="${task.getPriority() == 1}" th:text="'Высокий'">VALUE</span>
+    <span th:if="${task.getPriority() == 2}" th:text="'Средний'">VALUE</span>
+    <span th:if="${task.getPriority() == 3}" th:text="'Низкий'">VALUE</span>
+</p>
+
+<p><b>Статус:</b>
+    <span th:if="${task.getStatus() == true}" th:text="'Активно'">VALUE</span>
+    <span th:if="${task.getStatus() == false}" th:text="'Завершено'">VALUE</span>
+</p>
+
+<p><b>Пользователь:</b>
+    <span th:if="${task.getOwner() != null}" th:text="${task.getOwner().getFullName()}">VALUE</span>
+    <span th:if="${task.getOwner() == null}" th:text="'Задача не назначена'">VALUE</span>
+</p>
+
+<p><b>Описание задачи:</b> <span th:text="${'  ' + task.getDescription()}">VALUE</span></p>
+<p><b>Отчет:</b> <span th:text="${'  ' + task.getReport()}">VALUE</span></p>
+</br>
 
 <form th:method="GET" th:action="@{/tasks/{id}/edit(id=${task.getId()})}">
     <input type="submit" value="Редактировать"/>
 </form>
-
+</br>
 <form th:method="DELETE" th:action="@{/tasks/{id}(id=${task.getId()})}">
     <input type="submit" value="Удалить"/>
 </form>
-
 
 </body>
 </html>

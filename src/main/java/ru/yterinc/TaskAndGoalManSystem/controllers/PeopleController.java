@@ -16,6 +16,7 @@ public class PeopleController {
     private final PeopleService peopleService;
     private final PersonValidator personValidator;
 
+
     @Autowired
     public PeopleController(PeopleService peopleService, PersonValidator personValidator) {
         this.peopleService = peopleService;
@@ -31,6 +32,7 @@ public class PeopleController {
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
         model.addAttribute("person", peopleService.findOne(id));
+        model.addAttribute("tasks",peopleService.getTaskByPersonId(id));
         return "people/show";
     }
 

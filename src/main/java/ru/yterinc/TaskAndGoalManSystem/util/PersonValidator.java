@@ -24,18 +24,23 @@ public class PersonValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Person person = (Person) target;
-        int id = person.getId();
 
-        if (peopleService.getPersonByFullName(person.getFullName()).isPresent()
-                && peopleService.getPersonByFullName(person.getFullName()).get().getId() != id) // валидация после && сделано для проверки при редактировании пользователя
-            errors.rejectValue("fullName", "", "Пользователь с таким ФИО уже существует");
+        if (person.getId() != null) { // для редактирования существующих пользователей
+            int id = person.getId();
+            if (peopleService.getPersonByFullName(person.getFullName()).isPresent()
+                    && peopleService.getPersonByFullName(person.getFullName()).get().getId() != id) // валидация после && сделано для проверки при редактировании пользователя
+                errors.rejectValue("fullName", "", "Пользователь с таким ФИО уже существует");
 
-        if (peopleService.getPersonByEmail(person.getEmail()).isPresent()
-                && peopleService.getPersonByEmail(person.getEmail()).get().getId() != id) // валидация после && сделано для проверки при редактировании пользователя
-            errors.rejectValue("email", "", "Пользователь с таким Email уже существует");
+            if (peopleService.getPersonByEmail(person.getEmail()).isPresent()
+                    && peopleService.getPersonByEmail(person.getEmail()).get().getId() != id) // валидация после && сделано для проверки при редактировании пользователя
+                errors.rejectValue("email", "", "Пользователь с таким Email уже существует");
+        } else { // для новых пользователей
+            if (peopleService.getPersonByFullName(person.getFullName()).isPresent())
+                errors.rejectValue("fullName", "", "Пользователь с таким ФИО уже существует");
 
+            if (peopleService.getPersonByEmail(person.getEmail()).isPresent())
+                errors.rejectValue("email", "", "Пользователь с таким Email уже существует");
 
+        }
     }
-
-
 }
