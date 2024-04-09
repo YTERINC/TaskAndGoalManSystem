@@ -8,7 +8,7 @@
 <body>
 
 <h2> Список всех задач </h2>
-<hr/>
+<hr>
 
 <div th:if="${tasks.isEmpty()}">
     <hr/>
@@ -16,8 +16,8 @@
 </div>
 
 <div th:if="${!tasks.isEmpty()}">
-    <br/>
-    <br/>
+    <br>
+    <br>
     <table>
         <tr>
             <th>Наименование задачи</th>
@@ -47,20 +47,20 @@
                 value
             </td>
 
-            <td th:if="${task.getStatus() == true}" th:text="Активно">
+            <td th:if="${task.getStatus() == true}" th:text="Активна">
                 value true
             </td>
-            <td th:if="${task.getStatus() == false}" th:text="Завершено">
+            <td th:if="${task.getStatus() == false}" th:text="Завершена">
                 value false
             </td>
 
-            <td th:text="${task.getCreatedAt()}">
+            <td th:text="${#temporals.format(task.getCreatedAt(), 'dd-MM-yyyy HH:mm')}">
                 value
             </td>
-            <td th:text="${task.getExecutionAt()}">
+            <td th:text="${#temporals.format(task.getExecutionAt(), 'dd-MM-yyyy HH:mm')}">
                 value
             </td>
-            <td th:text="${task.getDeadline()}">
+            <td th:text="${#temporals.format(task.getDeadline(), 'dd-MM-yyyy HH:mm')}">
                 value
             </td>
 
@@ -77,6 +77,5 @@
         </tr>
     </table>
 </div>
-
 </body>
 </html>

@@ -2,12 +2,14 @@ package ru.yterinc.TaskAndGoalManSystem.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-
+import org.springframework.format.annotation.DateTimeFormat;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Table(name = "Task")
-public class Task {
+public class Task implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,15 +32,21 @@ public class Task {
 
     @Column(name = "created_at")
 //    @NotNull
-    private Date createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime createdAt;
 
     @Column(name = "deadline")
-//    @NotNull
-    private Date deadline;
+    @Temporal(TemporalType.TIMESTAMP)
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull
+    private LocalDateTime deadline;
 
     @Column(name = "execution_at")
 //    @NotNull
-    private Date executionAt;
+    @Temporal(TemporalType.TIMESTAMP)
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime executionAt;
 
     @Column(name = "description")
     private String description;
@@ -53,7 +61,7 @@ public class Task {
     public Task() {
     }
 
-    public Task(String taskName, Integer priority, Boolean status, Date createdAt, Date deadline, Date executionAt, String description, String report, Person owner) {
+    public Task(String taskName, Integer priority, Boolean status, LocalDateTime createdAt, LocalDateTime deadline, LocalDateTime executionAt, String description, String report, Person owner) {
         this.taskName = taskName;
         this.priority = priority;
         this.status = status;
@@ -97,30 +105,6 @@ public class Task {
         this.status = status;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
-    }
-
-    public Date getExecutionAt() {
-        return executionAt;
-    }
-
-    public void setExecutionAt(Date executionAt) {
-        this.executionAt = executionAt;
-    }
-
     public Person getOwner() {
         return owner;
     }
@@ -145,5 +129,27 @@ public class Task {
         this.report = report;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
+
+    public LocalDateTime getExecutionAt() {
+        return executionAt;
+    }
+
+    public void setExecutionAt(LocalDateTime executionAt) {
+        this.executionAt = executionAt;
+    }
 }

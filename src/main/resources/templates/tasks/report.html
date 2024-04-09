@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Завершение задачи</title>
+</head>
+<body>
+<h2> Завершение задачи </h2>
+<hr>
+
+<form th:method="PATCH" th:action="@{/tasks/{id}/report(id=${task.getId()})}" >
+    <label for="description">Введите очетную информацию по задаче: </label>
+    <input type="text" th:name="description" id="description"/>
+    <br/>
+    <input type="submit" value="Завершить задачу"/>
+</form>
+</body>
+</html>

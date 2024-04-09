@@ -8,8 +8,7 @@
 <body>
 
 <h2> Информация о задаче </h2>
-<hr/>
-
+<hr>
 
 <p><b>Наименование задачи:</b> <span th:text="${task.getTaskName()}">VALUE</span></p>
 
@@ -20,9 +19,13 @@
 </p>
 
 <p><b>Статус:</b>
-    <span th:if="${task.getStatus() == true}" th:text="'Активно'">VALUE</span>
-    <span th:if="${task.getStatus() == false}" th:text="'Завершено'">VALUE</span>
+    <span th:if="${task.getStatus() == true}" th:text="'Активна'">VALUE</span>
+    <span th:if="${task.getStatus() == false}" th:text="'Завершена'">VALUE</span>
 </p>
+
+<p><b>Время создания:</b> <span th:text="${#temporals.format(task.getCreatedAt(), 'dd-MM-yyyy HH:mm')}">VALUE</span></p>
+<p><b>Время фактического завершения:</b> <span th:text="${#temporals.format(task.getExecutionAt(), 'dd-MM-yyyy HH:mm')}">VALUE</span></p>
+<p><b>Крайнее время исполнения:</b> <span th:text="${#temporals.format(task.getDeadline(), 'dd-MM-yyyy HH:mm')}">VALUE</span></p>
 
 <p><b>Пользователь:</b>
     <span th:if="${task.getOwner() != null}" th:text="${task.getOwner().getFullName()}">VALUE</span>
@@ -31,15 +34,19 @@
 
 <p><b>Описание задачи:</b> <span th:text="${'  ' + task.getDescription()}">VALUE</span></p>
 <p><b>Отчет:</b> <span th:text="${'  ' + task.getReport()}">VALUE</span></p>
-</br>
+<br>
 
 <form th:method="GET" th:action="@{/tasks/{id}/edit(id=${task.getId()})}">
     <input type="submit" value="Редактировать"/>
 </form>
-</br>
+<br>
 <form th:method="DELETE" th:action="@{/tasks/{id}(id=${task.getId()})}">
     <input type="submit" value="Удалить"/>
 </form>
-
+<br>
+<form th:if="${task.getStatus() == true}" th:method="GET" th:action="@{/tasks/{id}/report(id=${task.getId()})}">
+    <input type="submit" value="Завершить задачу"/>
+</form>
+<br>
 </body>
 </html>

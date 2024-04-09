@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.yterinc.TaskAndGoalManSystem.models.Task;
 import ru.yterinc.TaskAndGoalManSystem.repositories.TaskRepository;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class TaskService {
 
     @Transactional
     public void save(Task task) {
-        task.setCreatedAt(new Date());  // устанавливаем дату и время создания задачи
+        task.setCreatedAt(LocalDateTime.now());  // устанавливаем дату и время создания задачи
         task.setStatus(true);  // При создании задачи, она будут активна
         taskRepository.save(task);
     }
@@ -47,5 +48,12 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
+    @Transactional
+    public void createReport(int id, String description) {
+        Task task = findOne(id);
+        task.setStatus(false);
+        task.setExecutionAt(LocalDateTime.now());
+        task.setDescription(description);
+    }
 
 }

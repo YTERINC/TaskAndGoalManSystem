@@ -6,25 +6,23 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.yterinc.TaskAndGoalManSystem.models.Task;
-import ru.yterinc.TaskAndGoalManSystem.services.PeopleService;
 import ru.yterinc.TaskAndGoalManSystem.services.TaskService;
+
 
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
-    private final PeopleService peopleService;
 
     @Autowired
-    public TaskController(TaskService taskService, PeopleService peopleService) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
-        this.peopleService = peopleService;
     }
 
     @GetMapping()
     public String index(Model model) {
         model.addAttribute("tasks", taskService.findAll());
-        
+
         return "tasks/index";
     }
 
@@ -42,13 +40,13 @@ public class TaskController {
         return "tasks/new";
     }
 
-
     @PostMapping()
     public String create(@ModelAttribute("task") Task task,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "tasks/new";
 //        System.out.println("из POST --- id = " + id);
+//        model.addAttribute("task", task);
         taskService.save(task);
         return "redirect:/tasks";
     }
@@ -74,6 +72,23 @@ public class TaskController {
         taskService.delete(id);
         return "redirect:/tasks";
     }
+
+    @GetMapping("/{id}/report")
+    public String report(Model model,
+                         @PathVariable("id") int id) {
+        model.addAttribute("task", taskService.findOne(id));
+        return "tasks/report";
+    }
+
+    @PatchMapping("/{id}/report")
+    public String report(@ModelAttribute("description") String description,
+                         BindingResult bindingResult, @PathVariable("id") int id) {
+        if (bindingResult.hasErrors())
+            return "redirect:/tasks";
+        taskService.createReport(id, description);
+        return "redirect:/tasks";
+    }
+
 
 
 }

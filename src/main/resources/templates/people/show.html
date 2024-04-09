@@ -7,42 +7,42 @@
 </head>
 <body>
 <h2> Информация о пользователе </h2>
-<hr/>
+<hr>
 
 <p><b>Имя пользователя:</b> <span th:text="${'  ' + person.getFullName()}">VALUE</span></p>
 <p><b>Email:</b> <span th:text="${'  ' + person.getEmail()}">VALUE</span></p>
 <p><b>Год рождения:</b> <span th:text="${'  ' + person.getYearOfBirth()}">VALUE</span></p>
 <p><b>Роль пользователя:</b> <span th:text="${'  ' + person.getRole()}">VALUE</span></p>
 <p><b>Описание пользователя:</b> <span th:text="${'  ' + person.getDescription()}">VALUE</span></p>
-</br>
+<br>
 
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="Редактировать"/>
 </form>
-</br>
+<br>
 
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
     <input type="submit" value="Удалить"/>
 </form>
-</br>
+<br>
 
 
 <form action="/tasks/new">
     <input type="submit" value="Создать задачу"/>
 </form>
 
-</br>
+<br>
 
 <div th:if="${tasks.isEmpty()}">
-    <hr/>
+    <hr>
     <p>У данного пользователя задачи отсутствуют</p>
 </div>
 
 <div th:if="${!tasks.isEmpty()}">
-    <hr/>
+    <hr>
     <b>Задачи:</b>
-    <br/>
-    <br/>
+    <br>
+    <br>
     <table>
         <tr>
             <th>Наименование задачи</th>
@@ -71,20 +71,20 @@
                 value
             </td>
 
-            <td th:if="${task.getStatus() == true}" th:text="Активно">
+            <td th:if="${task.getStatus() == true}" th:text="Активна">
                 value true
             </td>
-            <td th:if="${task.getStatus() == false}" th:text="Завершено">
+            <td th:if="${task.getStatus() == false}" th:text="Завершена">
                 value false
             </td>
 
-            <td th:text="${task.getCreatedAt()}">
+            <td th:text="${#temporals.format(task.getCreatedAt(), 'dd-MM-yyyy HH:mm')}">
                 value
             </td>
-            <td th:text="${task.getExecutionAt()}">
+            <td th:text="${#temporals.format(task.getExecutionAt(), 'dd-MM-yyyy HH:mm')}">
                 value
             </td>
-            <td th:text="${task.getDeadline()}">
+            <td th:text="${#temporals.format(task.getDeadline(), 'dd-MM-yyyy HH:mm')}">
                 value
             </td>
 
