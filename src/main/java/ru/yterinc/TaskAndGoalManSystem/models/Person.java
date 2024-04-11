@@ -2,16 +2,18 @@ package ru.yterinc.TaskAndGoalManSystem.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
+import java.sql.Date;
 import java.util.List;
 
 // Модель пользователя
 @Entity
 @Table(name = "Person")
-public class Person {
+public class Person implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +28,10 @@ public class Person {
     @Column(name = "email")
     private String email;
 
-    @Min(value = 1900, message = "Год рождения должен быть больше, чем 1900")
+    @Temporal(TemporalType.DATE)
     @Column(name = "year_of_birth")
-    private int yearOfBirth;
+    @Past
+    private Date yearOfBirth;
 
     @Column(name = "role")
     private String role;
@@ -42,7 +45,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(String fullName, String email, int yearOfBirth, String role, String description) {
+    public Person(String fullName, String email, Date yearOfBirth, String role, String description) {
         this.fullName = fullName;
         this.email = email;
         this.yearOfBirth = yearOfBirth;
@@ -74,11 +77,11 @@ public class Person {
         this.email = email;
     }
 
-    public int getYearOfBirth() {
+    public Date getYearOfBirth() {
         return yearOfBirth;
     }
 
-    public void setYearOfBirth(int yearOfBirth) {
+    public void setYearOfBirth(Date yearOfBirth) {
         this.yearOfBirth = yearOfBirth;
     }
 

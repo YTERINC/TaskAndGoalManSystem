@@ -11,10 +11,11 @@
 
 <p><b>Имя пользователя:</b> <span th:text="${'  ' + person.getFullName()}">VALUE</span></p>
 <p><b>Email:</b> <span th:text="${'  ' + person.getEmail()}">VALUE</span></p>
-<p><b>Год рождения:</b> <span th:text="${'  ' + person.getYearOfBirth()}">VALUE</span></p>
+<p><b>Дата рождения:</b> <span th:text="${#dates.format(person.getYearOfBirth(), 'yyyy-MM-dd')}">VALUE</span></p>
 <p><b>Роль пользователя:</b> <span th:text="${'  ' + person.getRole()}">VALUE</span></p>
 <p><b>Описание пользователя:</b> <span th:text="${'  ' + person.getDescription()}">VALUE</span></p>
 <br>
+
 
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="Редактировать"/>
@@ -26,11 +27,9 @@
 </form>
 <br>
 
-
-<form action="/tasks/new">
+<form th:method="GET" th:action="@{/tasks/new/{id}(id=${person.getId()})}">
     <input type="submit" value="Создать задачу"/>
 </form>
-
 <br>
 
 <div th:if="${tasks.isEmpty()}">

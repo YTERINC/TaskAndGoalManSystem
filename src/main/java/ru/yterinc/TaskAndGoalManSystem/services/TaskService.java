@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yterinc.TaskAndGoalManSystem.models.Task;
+import ru.yterinc.TaskAndGoalManSystem.repositories.PeopleRepository;
 import ru.yterinc.TaskAndGoalManSystem.repositories.TaskRepository;
 
 import java.time.LocalDateTime;
@@ -15,10 +16,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final PeopleService peopleService;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, PeopleService peopleService) {
         this.taskRepository = taskRepository;
+
+        this.peopleService = peopleService;
     }
 
     public List<Task> findAll() {
@@ -31,9 +35,10 @@ public class TaskService {
     }
 
     @Transactional
-    public void save(Task task) {
+    public void save(Task task, int id) {
         task.setCreatedAt(LocalDateTime.now());  // устанавливаем дату и время создания задачи
         task.setStatus(true);  // При создании задачи, она будут активна
+        task.setOwner(peopleService.findOne(id));  // назначаем пользователя для задачи
         taskRepository.save(task);
     }
 

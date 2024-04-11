@@ -8,7 +8,7 @@
 <h2> Создание новой задачи </h2>
 <hr>
 
-<form th:method="POST" th:action="@{/tasks}" th:object="${task}">
+<form th:method="POST" th:action="@{/tasks/new/{id}(id=${id})}" th:object="${task}">
     <label for="taskName">Введите наименование задачи * : </label>
     <input type="text" th:field="*{taskName}" id="taskName"/>
     <br>

@@ -9,6 +9,7 @@ import ru.yterinc.TaskAndGoalManSystem.models.Task;
 import ru.yterinc.TaskAndGoalManSystem.services.TaskService;
 
 
+
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
@@ -22,7 +23,6 @@ public class TaskController {
     @GetMapping()
     public String index(Model model) {
         model.addAttribute("tasks", taskService.findAll());
-
         return "tasks/index";
     }
 
@@ -32,23 +32,24 @@ public class TaskController {
         return "tasks/show";
     }
 
-    @GetMapping("/new")
-    public String newTask(Model model) {
+    @GetMapping("/new/{id}")
+    public String newTask(Model model, @PathVariable("id") int id) {  // прокидываем ID пользователя
         Task task = new Task();
         model.addAttribute("task", task);
+        model.addAttribute("id",id);
 //        System.out.println("из GET /new --- id = " + id);
         return "tasks/new";
     }
 
-    @PostMapping()
+    @PostMapping("/new/{id}")
     public String create(@ModelAttribute("task") Task task,
-                         BindingResult bindingResult) {
+                         BindingResult bindingResult,
+                         @PathVariable("id") int id) {    // прокидываем ID пользователя
         if (bindingResult.hasErrors())
             return "tasks/new";
 //        System.out.println("из POST --- id = " + id);
-//        model.addAttribute("task", task);
-        taskService.save(task);
-        return "redirect:/tasks";
+        taskService.save(task, id);
+        return "redirect:/people/" + id;
     }
 
     @GetMapping("/{id}/edit")

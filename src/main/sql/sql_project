@@ -19,8 +19,13 @@ CREATE TABLE Task
     person_id int REFERENCES Person(id) ON DELETE SET NULL
 );
 
-TRUNCATE table Person;
+TRUNCATE table Person CASCADE;
 TRUNCATE table task;
+
+ALTER TABLE Person DROP column year_of_birth;
+ALTER TABLE Person ADD column year_of_birth date;
+
+
 
 ALTER TABLE Person ADD column role varchar(100) NOT NULL;
 ALTER TABLE Person ADD column description varchar(300);

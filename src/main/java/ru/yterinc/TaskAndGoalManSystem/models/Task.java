@@ -2,10 +2,9 @@ package ru.yterinc.TaskAndGoalManSystem.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "Task")
@@ -31,21 +30,16 @@ public class Task implements Serializable {
     private Boolean status;
 
     @Column(name = "created_at")
-//    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createdAt;
 
     @Column(name = "deadline")
     @Temporal(TemporalType.TIMESTAMP)
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDateTime deadline;
 
     @Column(name = "execution_at")
-//    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime executionAt;
 
     @Column(name = "description")
@@ -61,7 +55,10 @@ public class Task implements Serializable {
     public Task() {
     }
 
-    public Task(String taskName, Integer priority, Boolean status, LocalDateTime createdAt, LocalDateTime deadline, LocalDateTime executionAt, String description, String report, Person owner) {
+    public Task(String taskName, Integer priority, Boolean status,
+                LocalDateTime createdAt, LocalDateTime deadline,
+                LocalDateTime executionAt, String description,
+                String report, Person owner) {
         this.taskName = taskName;
         this.priority = priority;
         this.status = status;

@@ -11,7 +11,7 @@
 <form th:method="PATCH" th:action="@{/tasks/{id}/report(id=${task.getId()})}" >
     <label for="description">Введите очетную информацию по задаче: </label>
     <input type="text" th:name="description" id="description"/>
-    <br/>
+    <br>
     <input type="submit" value="Завершить задачу"/>
 </form>
 </body>

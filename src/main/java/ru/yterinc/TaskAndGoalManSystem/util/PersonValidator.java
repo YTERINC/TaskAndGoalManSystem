@@ -40,7 +40,11 @@ public class PersonValidator implements Validator {
 
             if (peopleService.getPersonByEmail(person.getEmail()).isPresent())
                 errors.rejectValue("email", "", "Пользователь с таким Email уже существует");
-
         }
+
+//        if (person.getYearOfBirth() == null)
+//            errors.rejectValue("yearOfBirth", "", "Необходимо указать дату рождения");
+
+
     }
 }
