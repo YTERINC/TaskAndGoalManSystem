@@ -39,18 +39,26 @@ public class Person implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "password")
+    private String password;
+
+    @Column(name="chief")
+    private String chief;
+
     @OneToMany(mappedBy = "owner")
     private List<Task> tasks;
 
     public Person() {
     }
 
-    public Person(String fullName, String email, Date yearOfBirth, String role, String description) {
+    public Person(String fullName, String email, Date yearOfBirth, String role, String description, String password, String chief) {
         this.fullName = fullName;
         this.email = email;
         this.yearOfBirth = yearOfBirth;
         this.role = role;
         this.description = description;
+        this.password = password;
+        this.chief = chief;
     }
 
     public Integer getId() {
@@ -107,5 +115,21 @@ public class Person implements Serializable {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getChief() {
+        return chief;
+    }
+
+    public void setChief(String chief) {
+        this.chief = chief;
     }
 }

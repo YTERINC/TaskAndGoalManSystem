@@ -21,7 +21,6 @@ public class TaskService {
     @Autowired
     public TaskService(TaskRepository taskRepository, PeopleService peopleService) {
         this.taskRepository = taskRepository;
-
         this.peopleService = peopleService;
     }
 
