@@ -1,33 +1,63 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:rel="stylesheet" th:href="@{/css/style.css}">
+    <link th:rel="stylesheet" th:href="@{/css/style_task.css}">
     <title>Информация о пользователя</title>
 </head>
 <body>
-<h2> Информация о пользователе </h2>
+
+<h2> Система управления задачами </h2>
+
+<div style="color:#7a061b" sec:authorize="isAuthenticated()">
+    Вы вошли как: <span sec:authentication="name"></span></div>
+<br>
+
+<div class="inp">
+<form action="/people">
+    <input type="submit" value="Список всех пользователей"/>
+</form>
+    &nbsp;
+<form action="/tasks">
+    <input type="submit" value="Список всех задач"/>
+</form>
+    &nbsp;
+<form action="/people/new">
+    <input type="submit" value="Создание нового пользователя"/>
+</form>
+    &nbsp;
+<form th:action="@{/logout}" th:method="POST">
+    <input type="submit" value="Выход">
+</form>
+</div>
+
 <hr>
+
+<h3> Информация о пользователе: </h3>
 
 <p><b>Имя пользователя:</b> <span th:text="${'  ' + person.getFullName()}">VALUE</span></p>
 <p><b>Email:</b> <span th:text="${'  ' + person.getEmail()}">VALUE</span></p>
 <p><b>Дата рождения:</b> <span th:text="${#dates.format(person.getYearOfBirth(), 'yyyy-MM-dd')}">VALUE</span></p>
 <p><b>Роль пользователя:</b> <span th:text="${'  ' + person.getRole()}">VALUE</span></p>
 <p><b>Описание пользователя:</b> <span th:text="${'  ' + person.getDescription()}">VALUE</span></p>
+<p><b>Шеф:</b>
+    <span th:if="${person.getChief() != person.getFullName()}" th:text="${'  ' + person.getChief()}">VALUE</span>
+    <span th:if="${person.getChief() == person.getFullName()}" th:text="Отсутствует">VALUE</span>
+</p>
 <br>
 
-
+<div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
 <form th:method="GET" th:action="@{/people/{id}/edit(id=${person.getId()})}">
     <input type="submit" value="Редактировать"/>
 </form>
 <br>
-
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
     <input type="submit" value="Удалить"/>
 </form>
 <br>
+</div>
 
-<form th:method="GET" th:action="@{/tasks/new/{id}(id=${person.getId()})}">
+<form th:method="GET" th:action="@{/tasks/new/{userid}(userid=${person.getId()})}">
     <input type="submit" value="Создать задачу"/>
 </form>
 <br>

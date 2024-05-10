@@ -1,16 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <link th:rel="stylesheet" th:href="@{/css/style_task.css}">
     <title>Новая задача</title>
 </head>
 <body>
-<h2> Создание новой задачи </h2>
+<h2> Система управления задачами </h2>
+
+<div style="color:#7a061b" sec:authorize="isAuthenticated()">
+    Вы вошли как: <span sec:authentication="name"></span></div>
+<br>
+<div class="inp">
+    <form action="/people">
+        <input type="submit" value="Список всех пользователей"/>
+    </form>
+    &nbsp;
+    <form action="/tasks">
+        <input type="submit" value="Список всех задач"/>
+    </form>
+    &nbsp;
+    <form action="/people/new">
+        <input type="submit" value="Создание нового пользователя"/>
+    </form>
+    &nbsp;
+    <form th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="Выход">
+    </form>
+</div>
+
 <hr>
 
-<form th:method="POST" th:action="@{/tasks/new/{id}(id=${id})}" th:object="${task}">
+<h3> Создание новой задачи: </h3>
+
+<form th:method="POST" th:action="@{/tasks/new/{userid}(userid=${userid})}" th:object="${task}">
     <label for="taskName">Введите наименование задачи * : </label>
     <input type="text" th:field="*{taskName}" id="taskName"/>
+    <div style="color:red" th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"> Error</div>
     <br>
     <br>
     <label for="priority">Введите уровень приоритета задачи * : </label>
@@ -25,8 +51,9 @@
     <input type="text" th:field="*{description}" id="description"/>
     <br>
     <br>
-    <label for="deadline">Введите крайнее время исполнения: </label>
+    <label for="deadline">Введите крайнее время исполнения * : </label>
     <input type="datetime-local" th:field="*{deadline}" id="deadline"/>
+    <div style="color:red" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}">Full Name Error</div>
     <br>
     <br>
     <input type="submit" value="Создать задачу"/>

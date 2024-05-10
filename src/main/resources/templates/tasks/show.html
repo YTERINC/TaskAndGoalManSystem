@@ -1,14 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
+    <link th:rel="stylesheet" th:href="@{/css/style_task.css}">
     <title>Информация о задаче</title>
 </head>
 <body>
+<h2> Система управления задачами </h2>
 
-<h2> Информация о задаче </h2>
+<div style="color:#7a061b" sec:authorize="isAuthenticated()">
+    Вы вошли как: <span sec:authentication="name"></span></div>
+<br>
+<div class="inp">
+    <form action="/people">
+        <input type="submit" value="Список всех пользователей"/>
+    </form>
+    &nbsp;
+    <form action="/tasks">
+        <input type="submit" value="Список всех задач"/>
+    </form>
+    &nbsp;
+    <form action="/people/new">
+        <input type="submit" value="Создание нового пользователя"/>
+    </form>
+    &nbsp;
+    <form th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="Выход">
+    </form>
+</div>
+
 <hr>
+
+<h3> Информация о задаче: </h3>
 
 <p><b>Наименование задачи:</b> <span th:text="${task.getTaskName()}">VALUE</span></p>
 
@@ -36,14 +60,16 @@
 <p><b>Отчет:</b> <span th:text="${'  ' + task.getReport()}">VALUE</span></p>
 <br>
 
+<div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
 <form th:method="GET" th:action="@{/tasks/{id}/edit(id=${task.getId()})}">
     <input type="submit" value="Редактировать"/>
 </form>
 <br>
-<form th:method="DELETE" th:action="@{/tasks/{id}(id=${task.getId()})}">
+<form  th:method="DELETE" th:action="@{/tasks/{id}(id=${task.getId()})}">
     <input type="submit" value="Удалить"/>
 </form>
 <br>
+</div>
 <form th:if="${task.getStatus() == true}" th:method="GET" th:action="@{/tasks/{id}/report(id=${task.getId()})}">
     <input type="submit" value="Завершить задачу"/>
 </form>

@@ -3,7 +3,6 @@ package ru.yterinc.TaskAndGoalManSystem.controllers;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,18 +37,12 @@ public class PeopleController {
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();   //TODO
-        int idSec = peopleService.getPersonByFullName(username).get().getId();
-        System.out.println(idSec);
-        if (peopleService.findOne(idSec).getFullName().equals(peopleService.findOne(id).getChief())
-                || peopleService.findOne(idSec).getRole().equals("ROLE_ADMIN")) { // на свою страницу может попасть только владелец или админ
-            model.addAttribute("person", peopleService.findOne(id));
+        Person person = peopleService.findOneByChief(id);
+        if (person != null) {
+            model.addAttribute("person", person);
             model.addAttribute("tasks", peopleService.getTaskByPersonId(id));
             return "people/show";
-        } else {
-            return "forbidden";
-        }
+        } else return "forbidden";
     }
 
     @GetMapping("/new")
@@ -72,18 +65,12 @@ public class PeopleController {
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-//        model.addAttribute("person", peopleService.findOne(id));
-
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();   //TODO
-        int idSec = peopleService.getPersonByFullName(username).get().getId();
-        System.out.println(idSec);
-        if (peopleService.findOne(idSec).getFullName().equals(peopleService.findOne(id).getChief())
-                || peopleService.findOne(idSec).getRole().equals("ROLE_ADMIN")) { // на свою страницу может попасть только владелец
-            model.addAttribute("person", peopleService.findOne(id));
+        Person person = peopleService.findOneByChief(id);
+        if (person != null) {
+            model.addAttribute("person", person);
+            model.addAttribute("people", peopleService.findAll());
             return "people/edit";
-        } else {
-            return "forbidden";
-        }
+        } else return "forbidden";
 
 
     }

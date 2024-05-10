@@ -1,7 +1,6 @@
 package ru.yterinc.TaskAndGoalManSystem.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,15 +30,11 @@ public class PeopleService {
         return peopleRepository.findAll();
     }
 
-
     public List<Person> findAllByChief() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();   //TODO
-        int idSec = getPersonByFullName(username).get().getId();
-        if (findOne(idSec).getRole().equals("ROLE_ADMIN"))
+        if (peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN"))
             return peopleRepository.findAll();
-        else return peopleRepository.findByChief(findOne(idSec).getFullName());
+        else return peopleRepository.findByChief(peopleRepository.findById(getIdAuthUser()).get().getFullName());
     }
-
 
     public Optional<Person> getPersonByFullName(String fullName) {
         return peopleRepository.findByFullName(fullName);
@@ -49,21 +44,28 @@ public class PeopleService {
         return peopleRepository.findByEmail(email);
     }
 
-//    @PreAuthorize("#id == authentication.principal.username")
-    public Person findOne(int id) {
+    public Person findOne(int id) {    // всегда возвращает пользователя, независимо от прав
         Optional<Person> foundPerson = peopleRepository.findById(id);
         return foundPerson.orElse(null);
+    }
+
+    public Person findOneByChief(int id) {  // возвращает пользователя, если авторизованный пользователь у него шеф
+        Optional<Person> foundPerson = peopleRepository.findById(id);
+        if (foundPerson.isPresent()
+                && (foundPerson.get().getChief().equals(peopleRepository.findById(getIdAuthUser()).get().getFullName())
+                || peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN"))
+        )
+            return foundPerson.orElse(null);
+        else return null;
     }
 
     @Transactional
     public void save(Person person) {
         String encodedPassword = passwordEncoder.encode(person.getPassword());
         person.setPassword(encodedPassword);
-
         person.setRole("ROLE_USER");
 
         System.out.println(person.getFullName());
-
         person.setChief(person.getFullName());
         peopleRepository.save(person);
     }
@@ -71,7 +73,7 @@ public class PeopleService {
     @Transactional
     public void update(int id, Person updatedPerson) {
         updatedPerson.setId(id);
-        updatedPerson.setRole("ROLE_USER");
+        updatedPerson.setPassword(findOne(id).getPassword());
         peopleRepository.save(updatedPerson);
     }
 
@@ -93,4 +95,8 @@ public class PeopleService {
         }
     }
 
+    private int getIdAuthUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return peopleRepository.findByFullName(username).get().getId();
+    }
 }

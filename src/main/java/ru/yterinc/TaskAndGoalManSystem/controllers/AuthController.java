@@ -30,7 +30,6 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage() {
-        System.out.println("Оk");
         return "auth/login";
     }
 

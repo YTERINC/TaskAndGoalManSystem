@@ -1,12 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <link th:rel="stylesheet" th:href="@{/css/style.css}">
     <title>Создание нового пользователя</title>
 </head>
 <body>
-<h2> Создание нового пользователя </h2>
+<h2> Система управления задачами </h2>
+
+<div style="color:#7a061b" sec:authorize="isAuthenticated()">
+    Вы вошли как: <span sec:authentication="name"></span></div>
+<br>
+
+<div class="inp">
+    <form action="/people">
+        <input type="submit" value="Список всех пользователей"/>
+    </form>
+    &nbsp;
+    <form action="/tasks">
+        <input type="submit" value="Список всех задач"/>
+    </form>
+    &nbsp;
+    <form action="/people/new">
+        <input type="submit" value="Создание нового пользователя"/>
+    </form>
+    &nbsp;
+    <form th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="Выход">
+    </form>
+</div>
+
 <hr>
+
+<h3> Создание нового пользователя: </h3>
 
 <form th:method="POST" th:action="@{/people}" th:object="${person}">
     <label for="fullName">Введите имя пользователя * : </label>
@@ -19,16 +45,11 @@
     <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
     <br>
     <br>
-    <label for="yearOfBirth">Введите дату рождения : </label>
+    <label for="yearOfBirth">Введите дату рождения * : </label>
     <input type="date" th:field="*{yearOfBirth}" id="yearOfBirth"/>
     <div style="color:red" th:if="${#fields.hasErrors('yearOfBirth')}" th:errors="*{yearOfBirth}">Year of birth Error</div>
     <br>
     <br>
-<!--    <label for="role">Введите роль пользователя: </label>-->
-<!--    <input type="text" th:field="*{role}" id="role"/>-->
-<!--    <div style="color:red" th:if="${#fields.hasErrors('role')}" th:errors="*{role}">Role</div>-->
-<!--    <br>-->
-<!--    <br>-->
     <label for="description">Введите описание пользователя: </label>
     <input type="text" th:field="*{description}" id="description"/>
     <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description</div>

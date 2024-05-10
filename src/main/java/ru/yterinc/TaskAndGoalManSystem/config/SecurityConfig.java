@@ -34,32 +34,22 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        // конфигурируем сам Spring Security
-        // конфигурируем авторизацию
 
         http.authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/people/**").hasRole("USER") // именно так, а не "ROLE_USER"
-//                        .requestMatchers("/people").hasRole("ADMIN")
-//                        .requestMatchers("/tasks/**").hasRole("ADMIN")
+//                        .requestMatchers("/people/**").hasRole("USER") // пример для ограничения доступа к отдельным страницам
                         .requestMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN")  // ко всем остальным страницам доступ будет как у админа так и у пользователей
-//                .anyRequest().authenticated()
         );
-
         http.formLogin(auth -> auth
                 .loginPage("/auth/login").loginProcessingUrl("/process_login")
                 .defaultSuccessUrl("/people", true)
                 .failureUrl("/auth/login?error"));
 
-
         http.logout(logout -> logout.
                 logoutUrl("/logout")
-//                .logoutSuccessUrl("auth/login")  // теперь это не надо
                 .addLogoutHandler(new SecurityContextLogoutHandler()));
 
-
         return http.build();
-
     }
 
     @Bean
@@ -68,18 +58,11 @@ public class SecurityConfig {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(getPasswordEncoder());
-
         return new ProviderManager(authenticationProvider);
     }
 
-
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();  // без шифрофания
         return new BCryptPasswordEncoder();
-
-
     }
-
-
 }

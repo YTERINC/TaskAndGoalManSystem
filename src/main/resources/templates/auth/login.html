@@ -5,8 +5,12 @@
     <title>Страница входа</title>
 </head>
 <body>
-<h2>Страница входа</h2>
+<h2>Система управления задачами</h2>
+<form action="/auth/registration">
+    <input type="submit" value="Регистрация нового пользователя"/>
+</form>
 <hr>
+<h3>Страница входа</h3>
 <br>
 
 <form name="f" method="post" action="/process_login">
@@ -26,5 +30,9 @@
         Неправильные имя или пароль
     </div>
 </form>
+<br>
+
+
+
 </body>
 </html>

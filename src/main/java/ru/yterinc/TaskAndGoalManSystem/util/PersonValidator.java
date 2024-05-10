@@ -12,12 +12,11 @@ import ru.yterinc.TaskAndGoalManSystem.services.PersonDetailsService;
 @Component
 public class PersonValidator implements Validator {
     private final PeopleService peopleService;
-    private final PersonDetailsService personDetailsService;
+//    private final PersonDetailsService personDetailsService;
 
     @Autowired
-    public PersonValidator(PeopleService peopleService, PersonDetailsService personDetailsService) {
+    public PersonValidator(PeopleService peopleService) {
         this.peopleService = peopleService;
-        this.personDetailsService = personDetailsService;
     }
 
     @Override
@@ -49,15 +48,15 @@ public class PersonValidator implements Validator {
         if (person.getYearOfBirth() == null)
             errors.rejectValue("yearOfBirth", "", "Необходимо указать дату рождения");
 
+//
+//        try {
+//            personDetailsService.loadUserByUsername(person.getFullName());
+//
+//        } catch (UsernameNotFoundException ignored) {
+//            return; // все ок, пользователь не найден
+//        }
 
-        try {
-            personDetailsService.loadUserByUsername(person.getFullName());
-
-        } catch (UsernameNotFoundException ignored) {
-            return; // все ок, пользователь не найден
-        }
-
-        errors.rejectValue("fullName", "", "Человек с таким именем пользователя уже существует");
+//        errors.rejectValue("fullName", "", "Человек с таким именем пользователя уже существует");
 
 
     }

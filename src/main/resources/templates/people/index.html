@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -8,21 +8,28 @@
     <link th:rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h2> Список всех пользователей </h2>
+<h2> Система управления задачами </h2>
+
+<div style="color:#7a061b" sec:authorize="isAuthenticated()">
+    Вы вошли как: <span sec:authentication="name"></span></div>
+<br>
+
+<div class="inp">
+    <form action="/tasks">
+        <input type="submit" value="Список всех задач"/>
+    </form>
+    &nbsp;
+    <form action="/people/new">
+        <input type="submit" value="Создание нового пользователя"/>
+    </form>
+    &nbsp;
+    <form th:action="@{/logout}" th:method="POST">
+        <input type="submit" value="Выход">
+    </form>
+</div>
 <hr>
 
-<br>
-
-<form action="/people/new">
-    <input type="submit" value="Создание нового пользователя"/>
-</form>
-<br>
-
-<form action="/tasks">
-    <input type="submit" value="Список всех задач"/>
-</form>
-<br>
-
+<h3> Список всех пользователей: </h3>
 
 <table>
     <tr>
@@ -30,7 +37,6 @@
         <th>Описание пользователя</th>
         <th>Роль</th>
     </tr>
-
     <tr th:each="person : ${people}">
         <td>
             <a th:href="@{/people/{id}(id=${person.getId()})}"
@@ -44,6 +50,5 @@
         </td>
     </tr>
 </table>
-
 </body>
 </html>

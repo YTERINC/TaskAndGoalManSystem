@@ -35,7 +35,7 @@ public class Task implements Serializable {
 
     @Column(name = "deadline")
     @Temporal(TemporalType.TIMESTAMP)
-    @NotNull
+//    @NotNull
     private LocalDateTime deadline;
 
     @Column(name = "execution_at")
