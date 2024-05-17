@@ -48,8 +48,10 @@
 </p>
 
 <p><b>Время создания:</b> <span th:text="${#temporals.format(task.getCreatedAt(), 'dd-MM-yyyy HH:mm')}">VALUE</span></p>
-<p><b>Время фактического завершения:</b> <span th:text="${#temporals.format(task.getExecutionAt(), 'dd-MM-yyyy HH:mm')}">VALUE</span></p>
-<p><b>Крайнее время исполнения:</b> <span th:text="${#temporals.format(task.getDeadline(), 'dd-MM-yyyy HH:mm')}">VALUE</span></p>
+<p><b>Время фактического завершения:</b> <span
+        th:text="${#temporals.format(task.getExecutionAt(), 'dd-MM-yyyy HH:mm')}">VALUE</span></p>
+<p><b>Крайнее время исполнения:</b> <span
+        th:text="${#temporals.format(task.getDeadline(), 'dd-MM-yyyy HH:mm')}">VALUE</span></p>
 
 <p><b>Пользователь:</b>
     <span th:if="${task.getOwner() != null}" th:text="${task.getOwner().getFullName()}">VALUE</span>
@@ -57,18 +59,21 @@
 </p>
 
 <p><b>Описание задачи:</b> <span th:text="${'  ' + task.getDescription()}">VALUE</span></p>
-<p><b>Отчет:</b> <span th:text="${'  ' + task.getReport()}">VALUE</span></p>
+
+<p><b>Отчет:</b> <span th:if="${task.getStatus() == true}" th:text="'Задача не решена'">VALUE</span>
+    <span th:if="${task.getStatus() == false}" th:text="${'  ' + task.getReport()}">VALUE</span>
+</p>
 <br>
 
 <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-<form th:method="GET" th:action="@{/tasks/{id}/edit(id=${task.getId()})}">
-    <input type="submit" value="Редактировать"/>
-</form>
-<br>
-<form  th:method="DELETE" th:action="@{/tasks/{id}(id=${task.getId()})}">
-    <input type="submit" value="Удалить"/>
-</form>
-<br>
+    <form th:method="GET" th:action="@{/tasks/{id}/edit(id=${task.getId()})}">
+        <input type="submit" value="Редактировать"/>
+    </form>
+    <br>
+    <form th:method="DELETE" th:action="@{/tasks/{id}(id=${task.getId()})}">
+        <input type="submit" value="Удалить"/>
+    </form>
+    <br>
 </div>
 <form th:if="${task.getStatus() == true}" th:method="GET" th:action="@{/tasks/{id}/report(id=${task.getId()})}">
     <input type="submit" value="Завершить задачу"/>

@@ -18,6 +18,7 @@ public class Person implements Serializable {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @NotEmpty(message = "Имя не должно быть пустым")
     @Size(min = 2, max = 100, message = "Имя должно быть от 2 до 100 символов длиной")
     @Column(name = "full_name")

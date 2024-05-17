@@ -13,4 +13,6 @@ public interface PeopleRepository extends JpaRepository<Person,Integer> {
 
     List<Person> findByChief(String chief);
 
+//    List<Person> findAllByChief(String chief);
+
 }

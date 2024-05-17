@@ -20,6 +20,8 @@ th {
 }
 .inp{
     display:  flex;
+}
 
-
+.textbox {
+    width: 420px;
 }

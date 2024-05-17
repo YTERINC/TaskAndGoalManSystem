@@ -9,6 +9,7 @@ import ru.yterinc.TaskAndGoalManSystem.repositories.PeopleRepository;
 import ru.yterinc.TaskAndGoalManSystem.repositories.TaskRepository;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,11 +45,18 @@ public class TaskService {
 
     public Task findOneByChief(int id) {
         Optional<Task> foundTask = taskRepository.findById(id);
-        if (foundTask.isPresent() && ((foundTask.get().getOwner().getId() == getIdAuthUser())
-                || foundTask.get().getOwner().getChief().equals(peopleService.findOne(getIdAuthUser()).getFullName()))
-                || peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN")) {
+        if (foundTask.isPresent() && foundTask.get().getOwner() != null &&
+                (foundTask.get().getOwner().getId() == getIdAuthUser()
+                        || foundTask.get().getOwner().getChief().equals(peopleService.findOne(getIdAuthUser()).getFullName())
+                        || peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN")))
             return foundTask.orElse(null);
-        } else return null;
+
+        else if (foundTask.isPresent()
+                && peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN")
+                && foundTask.get().getOwner() == null)
+            return foundTask.orElse(null);
+        else return null;
+
     }
 
     @Transactional
@@ -65,7 +73,7 @@ public class TaskService {
         updatedTask.setId(id);
         updatedTask.setStatus(true);
         updatedTask.setCreatedAt(findOne(id).getCreatedAt());
-        updatedTask.setOwner(findOne(id).getOwner());
+//        updatedTask.setOwner(findOne(id).getOwner());
         taskRepository.save(updatedTask);
     }
 
@@ -75,11 +83,11 @@ public class TaskService {
     }
 
     @Transactional
-    public void createReport(int id, String description) {
+    public void createReport(int id, String report) {
         Task task = findOne(id);
         task.setStatus(false);
         task.setExecutionAt(LocalDateTime.now());
-        task.setDescription(description);
+        task.setReport(report);
     }
 
     private int getIdAuthUser() {
@@ -87,4 +95,11 @@ public class TaskService {
         return peopleRepository.findByFullName(username).get().getId();
     }
 
+    public void checkExpired(List<Task> tasks) {
+        for (Task task : tasks) {
+            if (task.getStatus() && (task.getDeadline().isBefore(LocalDateTime.now()))) {
+                task.setExpired(true);
+            }
+        }
+    }
 }

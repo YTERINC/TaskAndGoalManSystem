@@ -79,7 +79,7 @@
             <td th:text="${#temporals.format(task.getExecutionAt(), 'dd-MM-yyyy HH:mm')}">
                 value
             </td>
-            <td th:text="${#temporals.format(task.getDeadline(), 'dd-MM-yyyy HH:mm')}">
+            <td th:text="${#temporals.format(task.getDeadline(), 'dd-MM-yyyy HH:mm')}" th:style ="${task.isExpired()} ? 'color: red' : 'color: black' ">
                 value
             </td>
 

@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,7 +34,14 @@ public class PeopleService {
     public List<Person> findAllByChief() {
         if (peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN"))
             return peopleRepository.findAll();
-        else return peopleRepository.findByChief(peopleRepository.findById(getIdAuthUser()).get().getFullName());
+        else if (peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_USER")
+                && Objects.equals(peopleRepository.findById(getIdAuthUser()).get().getChief(), peopleRepository.findById(getIdAuthUser()).get().getFullName()))
+            return peopleRepository.findByChief(peopleRepository.findById(getIdAuthUser()).get().getFullName());
+        else { //  если пользователь имеет шефа, его добавляем в список пользователей отдельно, иначе его не будет видно
+            List<Person> people = peopleRepository.findByChief(peopleRepository.findById(getIdAuthUser()).get().getFullName());
+            people.add(peopleRepository.findById(getIdAuthUser()).get());
+            return people;
+        }
     }
 
     public Optional<Person> getPersonByFullName(String fullName) {
@@ -53,8 +61,8 @@ public class PeopleService {
         Optional<Person> foundPerson = peopleRepository.findById(id);
         if (foundPerson.isPresent()
                 && (foundPerson.get().getChief().equals(peopleRepository.findById(getIdAuthUser()).get().getFullName())
-                || peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN"))
-        )
+                || peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN")
+                || foundPerson.get().getFullName().equals(peopleRepository.findById(getIdAuthUser()).get().getFullName()))) // для того чтобы пользователь видел свою страницу, если у него есть шеф
             return foundPerson.orElse(null);
         else return null;
     }
@@ -79,7 +87,14 @@ public class PeopleService {
 
     @Transactional
     public void delete(int id) {
+
+        List<Person> people = peopleRepository.findByChief(peopleRepository.findById(id).get().getFullName());
+        for (Person person : people) {
+            person.setChief(person.getFullName());
+            peopleRepository.save(person);
+        }
         peopleRepository.deleteById(id);
+
     }
 
     public List<Task> getTaskByPersonId(int id) {
@@ -87,7 +102,7 @@ public class PeopleService {
 
         if (person.isPresent()) {
             Hibernate.initialize(person.get().getTasks());
-            // не мешает всегда вызывать Hibernate.initialize()
+            // вызываем Hibernate.initialize()
             // на случай, например, если код в дальнейшем поменяется
             return person.get().getTasks();
         } else {

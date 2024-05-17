@@ -26,7 +26,7 @@ public class Task implements Serializable {
     private Integer priority;
 
     @Column(name = "status")
-    @NotNull
+//    @NotNull  // на NULL не проверяем, т.к. на уровне сервиса устанавливаем значение
     private Boolean status;
 
     @Column(name = "created_at")
@@ -35,7 +35,7 @@ public class Task implements Serializable {
 
     @Column(name = "deadline")
     @Temporal(TemporalType.TIMESTAMP)
-//    @NotNull
+    @Future
     private LocalDateTime deadline;
 
     @Column(name = "execution_at")
@@ -51,6 +51,9 @@ public class Task implements Serializable {
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person owner;
+
+    @Transient
+    private boolean expired;
 
     public Task() {
     }
@@ -148,5 +151,13 @@ public class Task implements Serializable {
 
     public void setExecutionAt(LocalDateTime executionAt) {
         this.executionAt = executionAt;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

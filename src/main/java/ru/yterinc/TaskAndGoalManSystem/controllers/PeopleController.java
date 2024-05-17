@@ -10,6 +10,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.yterinc.TaskAndGoalManSystem.models.Person;
 import ru.yterinc.TaskAndGoalManSystem.services.PeopleService;
+import ru.yterinc.TaskAndGoalManSystem.services.TaskService;
 import ru.yterinc.TaskAndGoalManSystem.util.PersonValidator;
 
 import java.sql.Date;
@@ -20,12 +21,14 @@ import java.text.SimpleDateFormat;
 public class PeopleController {
     private final PeopleService peopleService;
     private final PersonValidator personValidator;
+    private final TaskService taskService;
 
 
     @Autowired
-    public PeopleController(PeopleService peopleService, PersonValidator personValidator) {
+    public PeopleController(PeopleService peopleService, PersonValidator personValidator, TaskService taskService) {
         this.peopleService = peopleService;
         this.personValidator = personValidator;
+        this.taskService = taskService;
     }
 
     @GetMapping()
@@ -41,6 +44,7 @@ public class PeopleController {
         if (person != null) {
             model.addAttribute("person", person);
             model.addAttribute("tasks", peopleService.getTaskByPersonId(id));
+            taskService.checkExpired(peopleService.getTaskByPersonId(id));
             return "people/show";
         } else return "forbidden";
     }

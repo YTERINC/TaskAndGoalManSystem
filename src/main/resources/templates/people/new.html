@@ -51,7 +51,7 @@
     <br>
     <br>
     <label for="description">Введите описание пользователя: </label>
-    <input type="text" th:field="*{description}" id="description"/>
+    <input type="text" th:field="*{description}" id="description" class="textbox"/>
     <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description</div>
     <br>
     <br>

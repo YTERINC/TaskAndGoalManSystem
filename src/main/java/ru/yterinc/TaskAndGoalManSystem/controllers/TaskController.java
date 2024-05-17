@@ -15,11 +15,13 @@ import ru.yterinc.TaskAndGoalManSystem.util.TaskValidator;
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
+    private final PeopleService peopleService;
     private final TaskValidator taskValidator;
 
     @Autowired
     public TaskController(TaskService taskService, PeopleService peopleService, TaskValidator taskValidator) {
         this.taskService = taskService;
+        this.peopleService = peopleService;
         this.taskValidator = taskValidator;
     }
 
@@ -27,6 +29,7 @@ public class TaskController {
     public String index(Model model) {
 //        model.addAttribute("tasks", taskService.findAll());
         model.addAttribute("tasks", taskService.findAllByChief());
+        taskService.checkExpired(taskService.findAllByChief());
         return "tasks/index";
     }
 
@@ -45,7 +48,7 @@ public class TaskController {
         Task task = new Task();
         model.addAttribute("task", task);
         model.addAttribute("userid", userId);
-//        System.out.println("из GET /new --- userId = " + userId);
+        System.out.println("из GET /new --- userId = " + userId);
         return "tasks/new";
     }
 
@@ -55,9 +58,10 @@ public class TaskController {
                          BindingResult bindingResult,
                          @PathVariable("userid") int userId) {    // прокидываем ID пользователя
         taskValidator.validate(task, bindingResult);
+        System.out.println("из POST --- Error "+ bindingResult.toString());
         if (bindingResult.hasErrors())
             return "tasks/new";
-//        System.out.println("из POST --- userId = " + userId);
+        System.out.println("из POST --- userId = " + userId);
         taskService.save(task, userId);
         return "redirect:/people/" + userId;
     }
@@ -68,7 +72,7 @@ public class TaskController {
         Task task = taskService.findOneByChief(id);
         if (task != null) {
             model.addAttribute("task", task);
-
+            model.addAttribute("people", peopleService.findAll());
             System.out.println("Controller get2!!!!!!!!!!!!!!!!!!!");
             return "tasks/edit";
         } else return "forbidden";
