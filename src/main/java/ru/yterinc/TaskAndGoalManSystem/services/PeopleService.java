@@ -1,6 +1,8 @@
 package ru.yterinc.TaskAndGoalManSystem.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,6 +80,9 @@ public class PeopleService {
 
     @Transactional
     public void update(int id, Person updatedPerson) {
+        if (findOne(id).getChief().equals(findOne(id).getFullName())) // если меняем "Имя" и при этом пользователь сам себе шеф, то обновляем поле "Шеф"
+            updatedPerson.setChief(updatedPerson.getFullName());
+
         updatedPerson.setId(id);
         updatedPerson.setPassword(findOne(id).getPassword());
         peopleRepository.save(updatedPerson);
@@ -106,8 +111,18 @@ public class PeopleService {
         }
     }
 
-    private int getIdAuthUser() {
+    public int getIdAuthUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return peopleRepository.findByFullName(username).get().getId();
+    }
+
+    @Transactional
+    public void updatePassword(int id, String newPass) {
+        Person person = findOneByChief(id);
+
+        if (person != null) {
+            person.setPassword(passwordEncoder.encode(newPass));
+            peopleRepository.save(person);
+        }
     }
 }

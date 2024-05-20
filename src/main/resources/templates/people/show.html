@@ -62,6 +62,11 @@
 </div>
 <br>
 
+<form th:method="GET" th:action="@{/people/{userid}/change-pass(userid=${person.getId()})}">
+    <input type="submit" value="Изменить пароль"/>
+</form>
+<br>
+
 <form th:method="GET" th:action="@{/tasks/new/{userid}(userid=${person.getId()})}">
     <input type="submit" value="Создать задачу"/>
 </form>

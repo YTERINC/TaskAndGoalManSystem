@@ -44,5 +44,8 @@ public class PersonValidator implements Validator {
 
         if (person.getYearOfBirth() == null)
             errors.rejectValue("yearOfBirth", "", "Необходимо указать дату рождения");
+
+        if (peopleService.getIdAuthUser() == person.getId() && peopleService.findOne(peopleService.getIdAuthUser()).getRole().equals("ROLE_ADMIN"))
+            errors.rejectValue("fullName", "", "Имя админа менять нельзя. Прошу обновить страницу");
     }
 }

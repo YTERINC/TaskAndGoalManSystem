@@ -23,7 +23,6 @@ public class PeopleController {
     private final PersonValidator personValidator;
     private final TaskService taskService;
 
-
     @Autowired
     public PeopleController(PeopleService peopleService, PersonValidator personValidator, TaskService taskService) {
         this.peopleService = peopleService;
@@ -36,7 +35,6 @@ public class PeopleController {
         model.addAttribute("people", peopleService.findAllByChief());
         return "people/index";
     }
-
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
@@ -51,7 +49,6 @@ public class PeopleController {
 
     @GetMapping("/new")
     public String newPerson(@ModelAttribute("person") Person person) {
-
         return "people/new";
     }
 
@@ -75,8 +72,6 @@ public class PeopleController {
             model.addAttribute("people", peopleService.findAll());
             return "people/edit";
         } else return "forbidden";
-
-
     }
 
     @PatchMapping("/{id}")
@@ -96,6 +91,23 @@ public class PeopleController {
         return "redirect:/people";
     }
 
+    @GetMapping("/{id}/change-pass")
+    public String changePasswordPage(Model model,
+                                     @PathVariable("id") int userId) {
+        Person person = peopleService.findOneByChief(userId);
+        if (person != null) {
+            model.addAttribute("id", userId);
+            return "people/change-pass";
+        } else return "forbidden";
+    }
+
+    @PostMapping("/{id}/change-pass")
+    public String changePasswordPage(@ModelAttribute("new-pass") @Valid String newPass,
+                                     @PathVariable("id") int id) {
+        peopleService.updatePassword(id, newPass);
+        return "redirect:/people";
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder) { // используется, чтобы можно было нулевую дату передавать
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -104,5 +116,4 @@ public class PeopleController {
         // true passed to CustomDateEditor constructor means convert empty String to null
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  // true - значит можно передать null
     }
-
 }

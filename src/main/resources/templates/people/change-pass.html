@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link th:rel="stylesheet" th:href="@{/css/style_task.css}">
-    <title>Завершение задачи</title>
+    <link th:rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Изменение пароля</title>
 </head>
 <body>
 <h2> Система управления задачами </h2>
@@ -30,14 +30,14 @@
 </div>
 
 <hr>
+<h3> Изменение пароля пользователя: </h3>
 
-<h3> Завершение задачи: </h3>
-
-<form th:method="PATCH" th:action="@{/tasks/{id}/report(id=${task.getId()})}" >
-    <label for="description">Введите очетную информацию по задаче: </label>
-    <input type="text" th:name="description" id="description"/>
+<form th:method="POST" th:action="@{/people/{id}/change-pass(id=${id})}" >
+    <label for="new-pass">Введите новый пароль: </label>
+    <input type="password" th:name="new-pass" id="new-pass"/>
     <br>
-    <input type="submit" value="Завершить задачу"/>
+    <input type="submit" value="Изменить пароль"/>
 </form>
+
 </body>
 </html>
