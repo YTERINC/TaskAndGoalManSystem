@@ -1,18 +1,15 @@
 package ru.yterinc.TaskAndGoalManSystem.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.yterinc.TaskAndGoalManSystem.models.Person;
 import ru.yterinc.TaskAndGoalManSystem.services.PeopleService;
-import ru.yterinc.TaskAndGoalManSystem.services.PersonDetailsService;
 
 @Component
 public class PersonValidator implements Validator {
     private final PeopleService peopleService;
-//    private final PersonDetailsService personDetailsService;
 
     @Autowired
     public PersonValidator(PeopleService peopleService) {
@@ -47,17 +44,5 @@ public class PersonValidator implements Validator {
 
         if (person.getYearOfBirth() == null)
             errors.rejectValue("yearOfBirth", "", "Необходимо указать дату рождения");
-
-//
-//        try {
-//            personDetailsService.loadUserByUsername(person.getFullName());
-//
-//        } catch (UsernameNotFoundException ignored) {
-//            return; // все ок, пользователь не найден
-//        }
-
-//        errors.rejectValue("fullName", "", "Человек с таким именем пользователя уже существует");
-
-
     }
 }

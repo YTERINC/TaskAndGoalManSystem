@@ -27,7 +27,6 @@ public class AuthController {
         this.registrationService = registrationService;
     }
 
-
     @GetMapping("/login")
     public String loginPage() {
         return "auth/login";
@@ -42,16 +41,12 @@ public class AuthController {
     @PostMapping("/registration")
     public String performRegistration(@ModelAttribute("person") @Valid Person person,
                                       BindingResult bindingResult) {
-
         personValidator.validate(person, bindingResult);
 
-
         if (bindingResult.hasErrors()) {
-            System.out.println("ОШИБКА");
-            return "/auth/registration";}
-
+            return "/auth/registration";
+        }
         registrationService.register(person);
-
         return "redirect:/auth/login";
     }
 

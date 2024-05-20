@@ -72,8 +72,6 @@ public class PeopleService {
         String encodedPassword = passwordEncoder.encode(person.getPassword());
         person.setPassword(encodedPassword);
         person.setRole("ROLE_USER");
-
-        System.out.println(person.getFullName());
         person.setChief(person.getFullName());
         peopleRepository.save(person);
     }
@@ -87,14 +85,12 @@ public class PeopleService {
 
     @Transactional
     public void delete(int id) {
-
         List<Person> people = peopleRepository.findByChief(peopleRepository.findById(id).get().getFullName());
         for (Person person : people) {
             person.setChief(person.getFullName());
             peopleRepository.save(person);
         }
         peopleRepository.deleteById(id);
-
     }
 
     public List<Task> getTaskByPersonId(int id) {

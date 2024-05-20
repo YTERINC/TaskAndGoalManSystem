@@ -9,7 +9,6 @@ import ru.yterinc.TaskAndGoalManSystem.repositories.PeopleRepository;
 import ru.yterinc.TaskAndGoalManSystem.repositories.TaskRepository;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,11 +68,9 @@ public class TaskService {
 
     @Transactional
     public void update(int id, Task updatedTask) {
-        System.out.println("Service!!!!!!!!!!!!!!!!!!!");
         updatedTask.setId(id);
         updatedTask.setStatus(true);
         updatedTask.setCreatedAt(findOne(id).getCreatedAt());
-//        updatedTask.setOwner(findOne(id).getOwner());
         taskRepository.save(updatedTask);
     }
 
@@ -88,6 +85,7 @@ public class TaskService {
         task.setStatus(false);
         task.setExecutionAt(LocalDateTime.now());
         task.setReport(report);
+        taskRepository.save(task);
     }
 
     private int getIdAuthUser() {

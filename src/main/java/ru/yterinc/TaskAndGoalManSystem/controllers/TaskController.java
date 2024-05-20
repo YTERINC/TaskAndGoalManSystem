@@ -27,7 +27,6 @@ public class TaskController {
 
     @GetMapping()
     public String index(Model model) {
-//        model.addAttribute("tasks", taskService.findAll());
         model.addAttribute("tasks", taskService.findAllByChief());
         taskService.checkExpired(taskService.findAllByChief());
         return "tasks/index";
@@ -42,38 +41,31 @@ public class TaskController {
         } else return "forbidden";
     }
 
-    // Этот метод будет только для админа // TODO
     @GetMapping("/new/{userid}")
     public String newTask(Model model, @PathVariable("userid") int userId) {  // прокидываем ID пользователя
         Task task = new Task();
         model.addAttribute("task", task);
         model.addAttribute("userid", userId);
-        System.out.println("из GET /new --- userId = " + userId);
         return "tasks/new";
     }
 
-    // Этот метод будет только для админа // TODO
     @PostMapping("/new/{userid}")
     public String create(@ModelAttribute("task") @Valid Task task,
                          BindingResult bindingResult,
                          @PathVariable("userid") int userId) {    // прокидываем ID пользователя
         taskValidator.validate(task, bindingResult);
-        System.out.println("из POST --- Error "+ bindingResult.toString());
         if (bindingResult.hasErrors())
             return "tasks/new";
-        System.out.println("из POST --- userId = " + userId);
         taskService.save(task, userId);
         return "redirect:/people/" + userId;
     }
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        System.out.println("Controller get1!!!!!!!!!!!!!!!!!!!");
         Task task = taskService.findOneByChief(id);
         if (task != null) {
             model.addAttribute("task", task);
             model.addAttribute("people", peopleService.findAll());
-            System.out.println("Controller get2!!!!!!!!!!!!!!!!!!!");
             return "tasks/edit";
         } else return "forbidden";
     }
@@ -83,12 +75,8 @@ public class TaskController {
                          BindingResult bindingResult, @PathVariable("id") int id) {
         taskValidator.validate(task, bindingResult);
         if (bindingResult.hasErrors()) {
-            System.out.println("Controller patch1!!!!!!!!!!!!!!!!!!!");
-            System.out.println(bindingResult.getAllErrors());
             return "tasks/edit";
         }
-
-        System.out.println("Controller patch2!!!!!!!!!!!!!!!!!!!");
         taskService.update(id, task);
         return "redirect:/tasks";
     }
@@ -111,12 +99,8 @@ public class TaskController {
 
     @PatchMapping("/{id}/report")
     public String report(@ModelAttribute("description") String description,
-                         BindingResult bindingResult, @PathVariable("id") int id) {
-        if (bindingResult.hasErrors())
-            return "redirect:/tasks";
+                         @PathVariable("id") int id) {
         taskService.createReport(id, description);
         return "redirect:/tasks";
     }
-
-
 }
