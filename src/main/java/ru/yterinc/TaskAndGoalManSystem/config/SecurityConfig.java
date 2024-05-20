@@ -34,7 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/people/**").hasRole("USER") // пример для ограничения доступа к отдельным страницам
+//                        .requestMatchers("/people").hasRole("USER") // пример для ограничения доступа к отдельным страницам
                         .requestMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN")  // ко всем остальным страницам доступ будет как у админа так и у пользователей
         );

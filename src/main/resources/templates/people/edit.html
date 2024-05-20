@@ -34,12 +34,13 @@
 <h3> Редактирование данных о пользователе: </h3>
 
 <form th:method="PATCH" th:action="@{/people/{id}(id=${person.getId()})}" th:object="${person}">
-    <label for="fullName">Введите имя пользователя * : </label>
-    <input type="text" th:field="*{fullName}" id="fullName"/>
-    <div style="color:red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Full Name Error</div>
-    <br>
-    <br>
-
+<!--    <div th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">-->
+        <label for="fullName">Введите имя пользователя * : </label>
+        <input type="text" th:field="*{fullName}" id="fullName"/>
+        <div style="color:red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Full Name Error</div>
+        <br>
+        <br>
+<!--    </div>-->
     <label for="email">Введите Email * : </label>
     <input type="text" th:field="*{email}" id="email"/>
     <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
@@ -54,18 +55,18 @@
     <br>
 
     <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
-    <label for="role">Укажите роль пользователя * : </label>
-    <select th:object="${person}" th:field="*{role}" id="role">
-        <option th:value="ROLE_USER" th:text="ROLE_USER"></option>
-        <option th:value="ROLE_ADMIN" th:text="ROLE_ADMIN"></option>
-    </select>
-    <br>
-    <br>
+        <label for="role">Укажите роль пользователя * : </label>
+        <select th:object="${person}" th:field="*{role}" id="role">
+            <option th:value="ROLE_USER" th:text="ROLE_USER"></option>
+            <option th:value="ROLE_ADMIN" th:text="ROLE_ADMIN"></option>
+        </select>
+        <br>
+        <br>
     </div>
 
     <label for="description">Введите описание пользователя: </label>
     <input type="text" th:field="*{description}" id="description" class="textbox"/>
-    <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}" >Description</div>
+    <div style="color:red" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description</div>
     <br>
     <br>
 
