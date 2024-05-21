@@ -11,5 +11,5 @@ public interface PeopleRepository extends JpaRepository<Person,Integer> {
 
     Optional<Person> findByEmail(String email);
 
-    List<Person> findByChief(String chief);
+    List<Person> findByChiefId(int chiefId);
 }

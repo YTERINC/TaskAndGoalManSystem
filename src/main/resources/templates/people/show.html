@@ -41,8 +41,8 @@
 <p><b>Роль пользователя:</b> <span th:text="${'  ' + person.getRole()}">VALUE</span></p>
 <p><b>Описание пользователя:</b> <span th:text="${'  ' + person.getDescription()}">VALUE</span></p>
 <p><b>Шеф:</b>
-    <span th:if="${person.getChief() != person.getFullName()}" th:text="${'  ' + person.getChief()}">VALUE</span>
-    <span th:if="${person.getChief() == person.getFullName()}" th:text="Отсутствует">VALUE</span>
+    <span th:if="${person.getChiefId() != person.getId()}" th:text="${'  ' + chief.getFullName()}">VALUE</span>
+    <span th:if="${person.getChiefId() == person.getId()}" th:text="Отсутствует">VALUE</span>
 </p>
 <br>
 
@@ -51,10 +51,12 @@
         <input type="submit" value="Редактировать"/>
     </form>
     <br>
-    <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+
+    <form th:unless="${person.getRole().equals('ROLE_ADMIN')}" th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
         <input type="submit" value="Удалить"/>
     </form>
     <br>
+
 </div>
 
 <div th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" style="color:red">

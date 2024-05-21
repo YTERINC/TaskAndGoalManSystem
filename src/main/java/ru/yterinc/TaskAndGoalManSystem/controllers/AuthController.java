@@ -34,7 +34,6 @@ public class AuthController {
 
     @GetMapping("/registration")
     public String registrationPage(@ModelAttribute("person") Person person) {
-//        model.addAttribute("person",new Person());  // Могли здесь сделать вот так и положить пустого человека (вместо @ModelAttribute("person"))
         return "auth/registration";
     }
 
@@ -58,5 +57,4 @@ public class AuthController {
         // true passed to CustomDateEditor constructor means convert empty String to null
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  // true - значит можно передать null
     }
-
 }

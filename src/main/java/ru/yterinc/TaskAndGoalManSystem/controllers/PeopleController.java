@@ -31,24 +31,25 @@ public class PeopleController {
     }
 
     @GetMapping()
-    public String index(Model model) {
+    public String index(Model model) { // показываем авторизованного пользователя и всех его подчиненных, т.е у которых он шеф
         model.addAttribute("people", peopleService.findAllByChief());
         return "people/index";
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
+    public String show(@PathVariable("id") int id, Model model) { // показываем страницу авторизованного пользователя или одного из его подчиненных и список задач
         Person person = peopleService.findOneByChief(id);
         if (person != null) {
             model.addAttribute("person", person);
-            model.addAttribute("tasks", peopleService.getTaskByPersonId(id));
-            taskService.checkExpired(peopleService.getTaskByPersonId(id));
+            model.addAttribute("chief", peopleService.findOne(person.getChiefId()));
+            model.addAttribute("tasks", peopleService.getTaskByPersonId(id)); // добавляем в модель задачи пользователя
+            taskService.checkExpired(peopleService.getTaskByPersonId(id));  // проверка просроченных задач
             return "people/show";
         } else return "forbidden";
     }
 
     @GetMapping("/new")
-    public String newPerson(@ModelAttribute("person") Person person) {
+    public String newPerson(@ModelAttribute("person") Person person) {  // страница нового пользователя. Добавляем пустого человека в модель
         return "people/new";
     }
 
@@ -56,7 +57,7 @@ public class PeopleController {
     public String create(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult) {
 
-        personValidator.validate(person, bindingResult);
+        personValidator.validate(person, bindingResult);  // проверка создаваемого пользователя
         if (bindingResult.hasErrors())
             return "people/new";
 
@@ -68,8 +69,8 @@ public class PeopleController {
     public String edit(Model model, @PathVariable("id") int id) {
         Person person = peopleService.findOneByChief(id);
         if (person != null) {
-            model.addAttribute("person", person);
-            model.addAttribute("people", peopleService.findAll());
+            model.addAttribute("person", person);  // Добавляем в модель пользователя для его редактирования
+            model.addAttribute("people", peopleService.findAll());  // добавляем список всех пользователей для назначения шефа
             return "people/edit";
         } else return "forbidden";
     }
@@ -77,7 +78,7 @@ public class PeopleController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("person") @Valid Person person,
                          BindingResult bindingResult, @PathVariable("id") int id) {
-        personValidator.validate(person, bindingResult);
+        personValidator.validate(person, bindingResult);  // проверка редактируемого пользователя
         if (bindingResult.hasErrors())
             return "people/edit";
 
@@ -86,17 +87,17 @@ public class PeopleController {
     }
 
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") int id) {
+    public String delete(@PathVariable("id") int id) {  // удаление выбранного пользователя
         peopleService.delete(id);
         return "redirect:/people";
     }
 
     @GetMapping("/{id}/change-pass")
     public String changePasswordPage(Model model,
-                                     @PathVariable("id") int userId) {
+                                     @PathVariable("id") int userId) {  // изменение пароля
         Person person = peopleService.findOneByChief(userId);
         if (person != null) {
-            model.addAttribute("id", userId);
+            model.addAttribute("id", userId); // передаем в модель ID пользователя для которого меняем пароль
             return "people/change-pass";
         } else return "forbidden";
     }

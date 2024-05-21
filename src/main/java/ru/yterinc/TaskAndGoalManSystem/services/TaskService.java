@@ -31,9 +31,10 @@ public class TaskService {
     }
 
     public List<Task> findAllByChief() { // показываем только задачи пользователей у авторизированного пользователя и у тех у кого он шеф
+        // TODO теперь работает на основании chiefId
         if (peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN"))
             return taskRepository.findAll();
-        else return taskRepository.findAllByOwner_Chief(peopleService.findOne(getIdAuthUser()).getFullName());
+        else return taskRepository.findAllByOwner_ChiefId(getIdAuthUser());
     }
 
     public Task findOne(int id) {
@@ -44,10 +45,10 @@ public class TaskService {
 
     public Task findOneByChief(int id) {
         Optional<Task> foundTask = taskRepository.findById(id);
-        if (foundTask.isPresent() && foundTask.get().getOwner() != null &&
-                (foundTask.get().getOwner().getId() == getIdAuthUser()
-                        || foundTask.get().getOwner().getChief().equals(peopleService.findOne(getIdAuthUser()).getFullName())
-                        || peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN")))
+        if (foundTask.isPresent() && foundTask.get().getOwner() != null
+                && (foundTask.get().getOwner().getId() == getIdAuthUser()
+                || foundTask.get().getOwner().getChiefId().equals(getIdAuthUser())
+                || peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN")))
             return foundTask.orElse(null);
 
         else if (foundTask.isPresent()

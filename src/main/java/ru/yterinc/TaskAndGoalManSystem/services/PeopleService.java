@@ -35,10 +35,10 @@ public class PeopleService {
         if (peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN"))
             return peopleRepository.findAll();
         else if (peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_USER")
-                && Objects.equals(peopleRepository.findById(getIdAuthUser()).get().getChief(), peopleRepository.findById(getIdAuthUser()).get().getFullName()))
-            return peopleRepository.findByChief(peopleRepository.findById(getIdAuthUser()).get().getFullName());
+                && Objects.equals(peopleRepository.findById(getIdAuthUser()).get().getChiefId(), getIdAuthUser()))
+            return peopleRepository.findByChiefId(getIdAuthUser());
         else { //  если пользователь имеет шефа, его добавляем в список пользователей отдельно, иначе его не будет видно
-            List<Person> people = peopleRepository.findByChief(peopleRepository.findById(getIdAuthUser()).get().getFullName());
+            List<Person> people = peopleRepository.findByChiefId(getIdAuthUser());
             people.add(peopleRepository.findById(getIdAuthUser()).get());
             return people;
         }
@@ -60,9 +60,9 @@ public class PeopleService {
     public Person findOneByChief(int id) {  // возвращает пользователя, если авторизованный пользователь у него шеф
         Optional<Person> foundPerson = peopleRepository.findById(id);
         if (foundPerson.isPresent()
-                && (foundPerson.get().getChief().equals(peopleRepository.findById(getIdAuthUser()).get().getFullName())
+                && (foundPerson.get().getChiefId().equals(getIdAuthUser())
                 || peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN")
-                || foundPerson.get().getFullName().equals(peopleRepository.findById(getIdAuthUser()).get().getFullName()))) // для того чтобы пользователь видел свою страницу, если у него есть шеф
+                || id == getIdAuthUser())) // для того чтобы пользователь видел свою страницу, если у него есть шеф
             return foundPerson.orElse(null);
         else return null;
     }
@@ -72,32 +72,22 @@ public class PeopleService {
         String encodedPassword = passwordEncoder.encode(person.getPassword());
         person.setPassword(encodedPassword);
         person.setRole("ROLE_USER");
-        person.setChief(person.getFullName());
         peopleRepository.save(person);
+        person.setChiefId(person.getId());
     }
 
     @Transactional
     public void update(int id, Person updatedPerson) {
-        List<Person> people = peopleRepository.findByChief(peopleRepository.findById(id).get().getFullName());
-        for (Person person : people) {
-            person.setChief(updatedPerson.getFullName());
-            peopleRepository.save(person);
-        }
-
         updatedPerson.setId(id);
-
-        if (updatedPerson.getChief().equals(findOne(id).getFullName()))
-            updatedPerson.setChief(updatedPerson.getFullName());
-
         updatedPerson.setPassword(findOne(id).getPassword());
         peopleRepository.save(updatedPerson);
     }
 
     @Transactional
     public void delete(int id) {
-        List<Person> people = peopleRepository.findByChief(peopleRepository.findById(id).get().getFullName());
+        List<Person> people = peopleRepository.findByChiefId(id); // у кого шеф с таким ID
         for (Person person : people) {
-            person.setChief(person.getFullName());
+            person.setChiefId(person.getId()); // для каждого у кого шеф был с удаляемым ID, ставим свой ID, т.е. сам себе шеф
             peopleRepository.save(person);
         }
         peopleRepository.deleteById(id);
