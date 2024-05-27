@@ -90,7 +90,7 @@ public class TaskController {
     @GetMapping("/{id}/report")
     public String report(Model model,
                          @PathVariable("id") int id) {
-        Task task = taskService.findOneByChief(id); //TODO
+        Task task = taskService.findOneByChief(id);
         if (task != null) {
             model.addAttribute("task", task);
             return "tasks/report";

@@ -31,7 +31,6 @@ public class TaskService {
     }
 
     public List<Task> findAllByChief() { // показываем только задачи пользователей у авторизированного пользователя и у тех у кого он шеф
-        // TODO теперь работает на основании chiefId
         if (peopleRepository.findById(getIdAuthUser()).get().getRole().equals("ROLE_ADMIN"))
             return taskRepository.findAll();
         else return taskRepository.findAllByOwner_ChiefId(getIdAuthUser());
