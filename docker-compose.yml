@@ -18,10 +18,12 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - DB_HOST: "postgresql"
-      - POSTGRES_USER: "postgres"
-      - POSTGRES_PASSWORD: "123"
-      - SERVER_PORT: "8087"
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql/tgms_db
+      - SPRING_DATASOURCE_USER=postgres
+      - SPRING_DATASOURCE_PASSWORD=123
+      - SERVER_PORT=8087
+    ports:
+      - "8087:8087"
     expose:
       - "8087"
     depends_on:
