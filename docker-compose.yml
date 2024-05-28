@@ -1,28 +1,24 @@
-version: '3.9'
-
 services:
   postgresql:
     container_name: postgresql
-    image: postgres:3.20-alpine
+    image: postgres:alpine3.20
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "1"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
     ports:
       - "5432:5432"
     restart: always
     volumes:
-      - ./init:/docker-entrypoint-initdb.d/
+      - ./db:/docker-entrypoint-initdb.d/
       - db-data:/var/lib/postgresql/data
-    networks:
-      - app-network
 
   app:
-    container_name: TaskAndGoalManSystem
+    container_name: tagms
     build:
-      context: ./TaskAndGoalManSystem
+      context: .
       dockerfile: Dockerfile
     environment:
-      - "DB_HOST=TaskAndGoalManSystem_db"
+      - "DB_HOST=postgresql"
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=1"
       - "SERVER_PORT=8087"
@@ -31,9 +27,6 @@ services:
     depends_on:
       - postgresql
     restart: always
-    networks:
-      - app-network
 
-networks:
-  app-network:
-    driver: bridge
+volumes:
+  db-data:
