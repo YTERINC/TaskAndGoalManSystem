@@ -3,8 +3,9 @@ services:
     container_name: postgresql
     image: postgres:alpine3.20
     environment:
+      POSTGRES_DB: "tgms_db"
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "123"
+      POSTGRES_PASSWORD: "123Vbdfg++Au-+"
     ports:
       - "5432:5432"
     restart: always
@@ -18,10 +19,11 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
+      - SPRING_DATASOURCE.DRIVER-CLASS-NAME=org.postgresql.Driver
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql/tgms_db
       - SPRING_DATASOURCE_USER=postgres
-      - SPRING_DATASOURCE_PASSWORD=123
-      - SERV`````ER_PORT=8087
+      - SPRING_DATASOURCE_PASSWORD=123Vbdfg++Au-+
+      - SERVER_PORT=8087
     ports:
       - "8087:8087"
     expose:
