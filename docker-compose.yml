@@ -3,25 +3,25 @@ services:
     container_name: postgresql
     image: postgres:alpine3.20
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123"
     ports:
       - "5432:5432"
     restart: always
     volumes:
-      - ./db:/docker-entrypoint-initdb.d/
+      - ./db:/docker-entrypoint-initdb.d
       - db-data:/var/lib/postgresql/data
 
   app:
-    container_name: tagms
+    container_name: tgms
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      - "DB_HOST=postgresql"
-      - "POSTGRES_USER=postgres"
-      - "POSTGRES_PASSWORD=1"
-      - "SERVER_PORT=8087"
+      - DB_HOST: "postgresql"
+      - POSTGRES_USER: "postgres"
+      - POSTGRES_PASSWORD: "123"
+      - SERVER_PORT: "8087"
     expose:
       - "8087"
     depends_on:
