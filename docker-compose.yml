@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: "tgms_db"
       POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "123Vbdfg++Au-+"
+      POSTGRES_PASSWORD: "123Vbdfg"
     ports:
       - "5432:5432"
     restart: always
@@ -22,7 +22,7 @@ services:
       - SPRING_DATASOURCE.DRIVER-CLASS-NAME=org.postgresql.Driver
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql/tgms_db
       - SPRING_DATASOURCE_USER=postgres
-      - SPRING_DATASOURCE_PASSWORD=123Vbdfg++Au-+
+      - SPRING_DATASOURCE_PASSWORD=123Vbdfg
       - SERVER_PORT=8087
     ports:
       - "8087:8087"
