@@ -46,6 +46,6 @@ public class PersonValidator implements Validator {
             errors.rejectValue("yearOfBirth", "", "Необходимо указать дату рождения");
 
         if (person.getRole() != null && person.getRole().equals("ROLE_ADMIN"))
-            errors.rejectValue("fullName", "", "Имя админа менять нельзя. Прошу обновить страницу");
+            errors.rejectValue("fullName", "", "Параметры админа менять нельзя (задаются при установке приложения)");
     }
 }
