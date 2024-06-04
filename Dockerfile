@@ -1,7 +1,7 @@
-FROM openjdk:17-oracle
-ARG JAR_FILE=target/TaskAndGoalManSystem-0.0.1-SNAPSHOT.jar
-WORKDIR /opt/app
+FROM maven AS builder
 COPY ./ ./
-COPY ${JAR_FILE} app.jar
+RUN mvn clean package -DskipTests
+FROM openjdk:17-oracle
+COPY --from=builder /target/TaskAndGoalManSystem-0.0.1-SNAPSHOT.jar /app.jar
 EXPOSE 8087
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]
