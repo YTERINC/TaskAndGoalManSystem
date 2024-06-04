@@ -40,7 +40,7 @@ services:
     container_name: tgms
     build:
       context: .
-      dockerfile: Dockerfile_old
+      dockerfile: Dockerfile
     environment:
       - SPRING_DATASOURCE.DRIVER-CLASS-NAME=org.postgresql.Driver
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql/tgms_db
