@@ -5,13 +5,11 @@ services:
     restart: always
     ports:
       - 80:80
-      - 443:443
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - web-root:/var/www/html
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
-      - dhparam:/etc/ssl/certs
 
   certbot:
     image: certbot/certbot
@@ -22,7 +20,7 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
       - web-root:/var/www/html
-    command: certonly --webroot --webroot-path=/var/www/html --email y.terinc@gmail.com --agree-tos --no-eff-email --force-renewal -d yterinc.ru -d www.yterinc.ru
+    command: certonly --webroot --webroot-path=/var/www/html --email y.terinc@gmail.com --agree-tos --no-eff-email --staging -d yterinc.ru -d www.yterinc.ru
 
   postgresql:
     container_name: postgresql
@@ -42,7 +40,7 @@ services:
     container_name: tgms
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_old
     environment:
       - SPRING_DATASOURCE.DRIVER-CLASS-NAME=org.postgresql.Driver
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql/tgms_db
@@ -63,9 +61,3 @@ volumes:
   certbot-etc:
   certbot-var:
   web-root:
-  dhparam:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/user/TaskAndGoalManSystem/dhparam/
-      o: bind
