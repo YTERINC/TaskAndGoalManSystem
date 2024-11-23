@@ -1,12 +1,12 @@
 <h3> Spring MVC приложение - Система управления задачами</h3>
 
 <b>Стек технологий: </b>
-- Java 
-- Spring Boot, Spring Boot MVC, Spring Security, Spring Data JPA
-- HTML, Thymeleaf.
-- Docker, Docker Compose
-- PostgreSQL
-- ПО установлено на одноплатном компьютере Raspberry PI и доступно из сети Интернет.
+- Java <br>
+- Spring Boot, Spring Boot MVC, Spring Security, Spring Data JPA<br>
+- HTML, Thymeleaf<br>
+- Docker, Docker Compose<br>
+- PostgreSQL<br>
+- ПО установлено на одноплатном компьютере Raspberry PI и доступно из сети Интернет.<br>
 <br>
 Посмотреть на работу приложения можно по ссылке:<br>
 https://yterinc.ru/
